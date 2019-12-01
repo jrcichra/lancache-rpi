@@ -1,0 +1,40 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Prepare environment for buildx
+      run: bash -x prep.sh
+    - name: Build & Push lancachenet/ubuntu
+      run: |
+        git clone https://github.com/lancachenet/ubuntu.git
+        cd ubuntu
+        docker buildx build linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-ubuntu --push .
+        cd ..
+    - name: Build & Push lancachenet/ubuntu-nginx
+      run: |
+        git clone https://github.com/lancachenet/ubuntu-nginx.git
+        cd ubuntu-nginx
+        sed '1 s/^.*$/FROM jrcichra/lancachenet-ubuntu/' Dockerfile
+        docker buildx build linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-ubuntu-nginx --push .
+        cd ..
+    - name: Build & Push lancachenet/generic
+      run: |
+        git clone https://github.com/lancachenet/generic.git
+        cd generic
+        sed '1 s/^.*$/FROM jrcichra/lancachenet-ubuntu-nginx/' Dockerfile
+        docker buildx build linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-generic --push .
+        cd ..
+    - name: Build & Push lancachenet/monolithic
+      run: |
+        git clone https://github.com/lancachenet/monolithic.git
+        cd monolithic
+        sed '1 s/^.*$/FROM jrcichra/lancachenet-generic/' Dockerfile
+        docker buildx build linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-monolithic --push .
+        cd ..
