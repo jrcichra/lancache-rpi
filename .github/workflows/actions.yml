@@ -17,6 +17,9 @@ jobs:
         cd ubuntu
         docker buildx build linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-ubuntu --push .
         cd ..
+      env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build & Push lancachenet/ubuntu-nginx
       run: |
         git clone https://github.com/lancachenet/ubuntu-nginx.git
@@ -24,6 +27,9 @@ jobs:
         sed '1 s/^.*$/FROM jrcichra/lancachenet-ubuntu/' Dockerfile
         docker buildx build linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-ubuntu-nginx --push .
         cd ..
+      env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build & Push lancachenet/generic
       run: |
         git clone https://github.com/lancachenet/generic.git
@@ -31,6 +37,9 @@ jobs:
         sed '1 s/^.*$/FROM jrcichra/lancachenet-ubuntu-nginx/' Dockerfile
         docker buildx build linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-generic --push .
         cd ..
+      env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build & Push lancachenet/monolithic
       run: |
         git clone https://github.com/lancachenet/monolithic.git
@@ -38,3 +47,6 @@ jobs:
         sed '1 s/^.*$/FROM jrcichra/lancachenet-generic/' Dockerfile
         docker buildx build linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-monolithic --push .
         cd ..
+      env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
