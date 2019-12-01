@@ -29,7 +29,7 @@ jobs:
         export DOCKER_CLI_EXPERIMENTAL=enabled
         git clone https://github.com/lancachenet/ubuntu-nginx.git
         cd ubuntu-nginx
-        sed '1 s/^.*$/FROM jrcichra/lancachenet-ubuntu/' Dockerfile
+        cat Dockerfile | sed '1 s/^.*$/FROM jrcichra/lancachenet-ubuntu/' > Dockerfile
         docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-ubuntu-nginx --push .
         cd ..
       env:
@@ -40,7 +40,7 @@ jobs:
         export DOCKER_CLI_EXPERIMENTAL=enabled
         git clone https://github.com/lancachenet/generic.git
         cd generic
-        sed '1 s/^.*$/FROM jrcichra/lancachenet-ubuntu-nginx/' Dockerfile
+        cat Dockerfile | sed '1 s/^.*$/FROM jrcichra/lancachenet-ubuntu-nginx/' > Dockerfile
         docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-generic --push .
         cd ..
       env:
@@ -51,7 +51,7 @@ jobs:
         export DOCKER_CLI_EXPERIMENTAL=enabled
         git clone https://github.com/lancachenet/monolithic.git
         cd monolithic
-        sed '1 s/^.*$/FROM jrcichra/lancachenet-generic/' Dockerfile
+        cat Dockerfile | sed '1 s/^.*$/FROM jrcichra/lancachenet-generic/' > Dockerfile
         docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-monolithic --push .
         cd ..
       env:
