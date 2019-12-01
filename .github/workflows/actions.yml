@@ -11,6 +11,9 @@ jobs:
     - uses: actions/checkout@v1
     - name: Prepare environment for buildx
       run: bash -x prep.sh
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build & Push lancachenet/ubuntu
       run: |
         git clone https://github.com/lancachenet/ubuntu.git
