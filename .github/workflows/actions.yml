@@ -19,6 +19,7 @@ jobs:
         export DOCKER_CLI_EXPERIMENTAL=enabled
         git clone https://github.com/lancachenet/ubuntu.git
         cd ubuntu
+        sed '1c#!/bin/bash' overlay/init/entrypoint
         docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-ubuntu --push .
         cd ..
       env:
