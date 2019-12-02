@@ -65,7 +65,8 @@ jobs:
         export DOCKER_CLI_EXPERIMENTAL=enabled
         git clone https://github.com/jwilder/nginx-proxy.git
         cd nginx-proxy
-        docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/jwilder-nginx-proxy --push .
+        sed -i 's/amd64/armhf/g' Dockerfile
+        docker buildx build --platform linux/arm/v7 -t jrcichra/jwilder-nginx-proxy --push .
         cd ..
       env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
