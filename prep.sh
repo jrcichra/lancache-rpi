@@ -16,4 +16,4 @@ docker buildx create --name testbuilder
 docker buildx use testbuilder
 docker buildx inspect --bootstrap
 # Phase 2 - sign in
-echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin 
+echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
