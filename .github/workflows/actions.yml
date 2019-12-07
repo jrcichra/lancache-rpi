@@ -43,7 +43,7 @@ jobs:
         cd generic
         sed -i '1cFROM jrcichra/lancachenet-ubuntu-nginx' Dockerfile
         cat Dockerfile
-        sed -i '29cproxy_max_temp_file_size 1024m;' generic/overlay/etc/nginx/sites-available/generic.conf.d/root/20_cache.conf
+        sed -i '29cproxy_max_temp_file_size 1024m;' overlay/etc/nginx/sites-available/generic.conf.d/root/20_cache.conf
         docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-generic --push .
         cd ..
       env:
@@ -54,7 +54,7 @@ jobs:
         export DOCKER_CLI_EXPERIMENTAL=enabled
         git clone https://github.com/lancachenet/monolithic.git
         cd monolithic
-        sed -i '1cFROM jrcichra/lancachenet-generic' Dockerfile
+        sed -i '1cFROM jrcichra/lancachenet-'' Dockerfile
         cat Dockerfile
         docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-monolithic --push .
         cd ..
