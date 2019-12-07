@@ -54,7 +54,7 @@ jobs:
         export DOCKER_CLI_EXPERIMENTAL=enabled
         git clone https://github.com/lancachenet/monolithic.git
         cd monolithic
-        sed -i '1cFROM jrcichra/lancachenet-'' Dockerfile
+        sed -i '1cFROM jrcichra/lancachenet-generic' Dockerfile
         cat Dockerfile
         docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-monolithic --push .
         cd ..
