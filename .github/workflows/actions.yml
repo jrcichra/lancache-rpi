@@ -43,6 +43,7 @@ jobs:
         cd generic
         sed -i '1cFROM jrcichra/lancachenet-ubuntu-nginx' Dockerfile
         cat Dockerfile
+        sed -i '29cproxy_max_temp_file_size 1024m;' generic/overlay/etc/nginx/sites-available/generic.conf.d/root/20_cache.conf
         docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/lancachenet-generic --push .
         cd ..
       env:
