@@ -9,6 +9,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: Prepare environment for buildx
+      run: bash -x prep.sh
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build & Push jwilder/nginx-proxy
       run: |
         export DOCKER_CLI_EXPERIMENTAL=enabled
@@ -28,11 +33,6 @@ jobs:
       env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Prepare environment for buildx
-      run: bash -x prep.sh
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build & Push lancachenet/ubuntu
       run: |
         export DOCKER_CLI_EXPERIMENTAL=enabled
