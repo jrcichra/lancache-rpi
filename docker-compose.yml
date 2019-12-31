@@ -1,7 +1,7 @@
 version: '2'
 services:
   proxy:
-    image: budry/jwilder-nginx-proxy-arm
+    image: jrcichra/jwilder-nginx-proxy
     env_file: .env
     ports:
       - ${LANCACHE_IP}:80:80/tcp
