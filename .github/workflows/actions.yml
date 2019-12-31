@@ -64,9 +64,17 @@ jobs:
     - name: Build & Push jwilder/nginx-proxy
       run: |
         export DOCKER_CLI_EXPERIMENTAL=enabled
+        go get -u github.com/jwilder/forego
+        cd ~/go/src/github.com/jwilder/forego/
+        export GOOS=linux
+        export GOARCH=arm
+        make
+        cd -
         git clone https://github.com/jwilder/nginx-proxy.git
         cd nginx-proxy
+        cp ~/go/src/github.com/jwilder/forego/forego .
         sed -i 's/amd64/armhf/g' Dockerfile
+        sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
         docker buildx build --platform linux/arm/v7 -t jrcichra/jwilder-nginx-proxy --push .
         cd ..
       env:
