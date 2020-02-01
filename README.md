@@ -9,3 +9,7 @@
 This repo uses Github Actions. Click the Actions tab to view the script output.
 
 The docker images can be found on my docker hub account.
+
+
+## Manually triggered runs (Dates I decide to rerun the script and update the containers)
++ 2/1/2020 - I
