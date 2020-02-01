@@ -42,10 +42,9 @@ jobs:
         export GOARCH=arm64
         make
         cd -
-        git clone https://github.com/jwilder/nginx-proxy.git
         cd nginx-proxy
         cp ~/go/src/github.com/ddollar/forego/forego .
-        sed -i 's/amd64/armhf/g' Dockerfile
+        sed -i 's/amd64/arm64/g' Dockerfile
         sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
         docker buildx build --platform linux/arm64 -t jrcichra/jwilder-nginx-proxy --push .
         cd ..
