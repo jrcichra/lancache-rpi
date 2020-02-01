@@ -14,7 +14,7 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build & Push jwilder/nginx-proxy
+    - name: Build & Push jwilder/nginx-proxy for armv7
       run: |
         export DOCKER_CLI_EXPERIMENTAL=enabled
         go get -u github.com/ddollar/forego
@@ -29,6 +29,25 @@ jobs:
         sed -i 's/amd64/armhf/g' Dockerfile
         sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
         docker buildx build --platform linux/arm/v7 -t jrcichra/jwilder-nginx-proxy --push .
+        cd ..
+      env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build & Push jwilder/nginx-proxy for arm64
+      run: |
+        export DOCKER_CLI_EXPERIMENTAL=enabled
+        go get -u github.com/ddollar/forego
+        cd ~/go/src/github.com/ddollar/forego/
+        export GOOS=linux
+        export GOARCH=arm64
+        make
+        cd -
+        git clone https://github.com/jwilder/nginx-proxy.git
+        cd nginx-proxy
+        cp ~/go/src/github.com/ddollar/forego/forego .
+        sed -i 's/amd64/armhf/g' Dockerfile
+        sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
+        docker buildx build --platform linux/arm64 -t jrcichra/jwilder-nginx-proxy --push .
         cd ..
       env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
