@@ -46,7 +46,9 @@ jobs:
         git clone https://github.com/jwilder/nginx-proxy.git
         cd nginx-proxy
         cp ~/go/src/github.com/ddollar/forego/forego .
-        sed -i 's/amd64/arm64/g' Dockerfile
+        sed -i '23cRUN wget https://github.com/jrcichra/docker-gen/releases/download/0.7.4%2B-all/linux-arm64-docker-gen -O /usr/local/bin/docker-gen-linux-arm64-$DOCKER_GEN_VERSION' Dockerfile
+        sed -i '24c###' Dockerfile
+        sed -i '25c###' Dockerfile
         sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
         docker buildx build --platform linux/arm64 -t jrcichra/jwilder-nginx-proxy --push .
         cd ..
