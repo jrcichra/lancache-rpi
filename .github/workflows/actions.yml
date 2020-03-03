@@ -1,6 +1,11 @@
 name: CI
 
-on: [push]
+on:
+  schedule:
+    # update the images every week
+    - cron:  '0 0 * * 1'
+  push:
+    branches: master
 
 jobs:
   build:
