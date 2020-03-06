@@ -2,8 +2,8 @@ name: CI
 
 on:
   schedule:
-    # update the images every week
-    - cron:  '0 0 * * 1'
+    # update the images every morning
+    - cron:  '0 0 * * *'
   push:
     branches: master
 
