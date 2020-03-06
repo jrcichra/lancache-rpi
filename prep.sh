@@ -10,7 +10,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 docker-compose --version
 docker buildx --help
-docker run --rm --privileged docker/binfmt:820fdd95a9972a5308930a2bdfb8573dd4447ad3
+docker run --rm --privileged aptman/qus -s -- -p
 cat /proc/sys/fs/binfmt_misc/qemu-aarch64
 docker buildx create --name testbuilder
 docker buildx use testbuilder
