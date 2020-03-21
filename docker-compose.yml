@@ -1,7 +1,7 @@
 version: '2'
 services:
   proxy:
-    image: jrcichra/jwilder-nginx-proxy
+    image: jrcichra/jwilder-nginx-proxy-armv7
     env_file: .env
     ports:
       - ${LANCACHE_IP}:80:80/tcp
