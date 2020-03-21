@@ -15,9 +15,19 @@ jobs:
       run: |
         sudo systemctl disable systemd-resolved.service
         sudo systemctl stop systemd-resolved
-        echo -e "nameserver 8.8.8.8" > /tmp/resolv 
-        sudo cp /tmp/resolv /etc/resolv.conf
+        echo "[main]
+        plugins=ifupdown,keyfile
+        dns=default
+        
+        [ifupdown]
+        managed=false
+        
+        [device]
+        wifi.scan-rand-mac-address=no
+        " > /tmp/network
+        sudo cp /tmp/network /etc/NetworkManager/NetworkManager.conf
+        sudo systemctl list-unit-files
+        sudo service network-manager restart
         docker-compose up -d
-        echo -e "nameserver 127.0.0.1" > /tmp/resolv 
-        sudo cp /tmp/resolv /etc/resolv.conf
+        echo -e "nameserver 127.0.0.1" > /etc/resolv.conf
         nslookup lancache.steamcontent.com
