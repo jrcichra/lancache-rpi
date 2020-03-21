@@ -13,7 +13,9 @@ jobs:
     - uses: actions/checkout@v1
     - name: Start it and try to change resolv.conf and check the IP that comes back
       run: |
-        sudo lsof -i :53
+        sudo systemctl disable systemd-resolved.service
+        sudo systemctl stop systemd-resolved
         docker-compose up -d
         echo -e "nameserver 127.0.0.1" > /etc/resolv.conf
+        sudo service network-manager restart
         nslookup lancache.steamcontent.com
