@@ -33,7 +33,7 @@ jobs:
         cp ~/go/src/github.com/ddollar/forego/forego .
         sed -i 's/amd64/armhf/g' Dockerfile
         sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
-        docker buildx build --platform linux/arm/v7 -t jrcichra/jwilder-nginx-proxy --push .
+        docker buildx build --platform linux/arm/v7 -t jrcichra/jwilder-nginx-proxy-armv7 --push .
         cd ..
         rm -rf nginx-proxy
       env:
@@ -55,7 +55,7 @@ jobs:
         sed -i '24c###' Dockerfile
         sed -i '25c###' Dockerfile
         sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
-        docker buildx build --platform linux/arm64 -t jrcichra/jwilder-nginx-proxy --push .
+        docker buildx build --platform linux/arm64 -t jrcichra/jwilder-nginx-proxy-arm64 --push .
         cd ..
       env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
