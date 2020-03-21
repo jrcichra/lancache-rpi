@@ -129,3 +129,8 @@ jobs:
       env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
+    - name: Start it and try to change resolv.conf and check the IP that comes back
+      run: |
+        docker-compose up -d
+        echo -e "nameserver 127.0.0.1" > /etc/resolv.conf
+        nslookup lancache.steamcontent.com
