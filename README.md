@@ -14,7 +14,8 @@
   - `docker-compose up -d`
 + Configure your router and/or PC to serve lancache-dns
 + Further documentation can be found at [lancache.net](https://lancache.net/)
-
+## Test it
+http://diagnostics.lancache.net/
 ## Actions
 This repo uses Github Actions. Click the Actions tab to view the script output.
 
