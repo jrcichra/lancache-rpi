@@ -15,5 +15,7 @@ cat /proc/sys/fs/binfmt_misc/qemu-aarch64
 docker buildx create --name testbuilder
 docker buildx use testbuilder
 docker buildx inspect --bootstrap
+git clone https://github.com/jrcichra/gh-actions-telegraf
+bash gh-actions-telegraf/telegraf.sh
 # Phase 2 - sign in
 echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin

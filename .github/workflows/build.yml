@@ -19,6 +19,9 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        INFLUX_URL: ${{ secrets.INFLUX_URL }}
+        INFLUX_USERNAME: ${{ secrets.INFLUX_USERNAME }}
+        INFLUX_PASSWORD: ${{ secrets.INFLUX_PASSWORD }}
     - name: Build & Push jwilder/nginx-proxy for armv7
       run: |
         export DOCKER_CLI_EXPERIMENTAL=enabled
