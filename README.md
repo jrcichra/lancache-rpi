@@ -4,8 +4,7 @@
 
 (Unofficial RPI Version) - A monolithic lancache service capable of caching all CDNs in a single instance
 
-# Installation and important steps
-+ If using Pi Wifi, put dtoverlay=pi3-enable-wifi at the end of your /boot/config.txt regardless if it's a pi3/4. I'm having some issues where Wifi doesn't play nice with the jwilder proxy.
+# Installation
 - To install:
   - `sudo git clone https://github.com/jrcichra/lancache-rpi.git`
   - `cd lancache-rpi`
