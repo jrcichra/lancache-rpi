@@ -6,6 +6,7 @@
 
 # Installation
 - To install:
+  -  If you don't already have docker and docker-compose, run `sudo apt install docker.io docker-compose`
   - `sudo git clone https://github.com/jrcichra/lancache-rpi.git`
   - `cd lancache-rpi`
   - `nano .env`
