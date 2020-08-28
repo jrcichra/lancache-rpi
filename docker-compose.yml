@@ -5,16 +5,19 @@ services:
     env_file: .env
     ports:
       - ${DNS_BIND_IP}:53:53/udp
+    restart: always
   sniproxy:
     image: jrcichra/lancachenet-sniproxy:latest  ## Pulling Sniproxy for arm
     env_file: .env
     ports:
       - 443:443/tcp
+    restart: always
   monolithic:
     image: jrcichra/lancachenet-monolithic:latest ## Pulling monolithic for arm
     env_file: .env
     ports:
       - 80:80/tcp
+    restart: always
     volumes:
       - ${CACHE_ROOT}/cache:/data/cache
       - ${CACHE_ROOT}/logs:/data/logs
