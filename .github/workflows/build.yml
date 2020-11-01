@@ -37,7 +37,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build & Push jwilder/nginx-proxy for armv7
         run: |
-          export DOCKER_CLI_EXPERIMENTAL=enabled
           go get -u github.com/ddollar/forego
           cd ~/go/src/github.com/ddollar/forego/
           export GOOS=linux
@@ -52,9 +51,9 @@ jobs:
           docker buildx build --platform linux/arm/v7 -t jrcichra/jwilder-nginx-proxy-armv7 --push .
           cd ..
           rm -rf nginx-proxy
+          rm -rf ~/go/src/github.com/ddollar/forego/
       - name: Build & Push jwilder/nginx-proxy for arm64
         run: |
-          export DOCKER_CLI_EXPERIMENTAL=enabled
           go get -u github.com/ddollar/forego
           cd ~/go/src/github.com/ddollar/forego/
           export GOOS=linux
@@ -71,14 +70,12 @@ jobs:
           rm -rf nginx-proxy
       - name: Build & Push lancachenet/ubuntu
         run: |
-          export DOCKER_CLI_EXPERIMENTAL=enabled
           git clone https://github.com/lancachenet/ubuntu.git
           cd ubuntu
           docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-ubuntu --push .
           cd ..
       - name: Build & Push lancachenet/ubuntu-nginx
         run: |
-          export DOCKER_CLI_EXPERIMENTAL=enabled
           git clone https://github.com/lancachenet/ubuntu-nginx.git
           cd ubuntu-nginx
           sed -i '1cFROM jrcichra/lancachenet-ubuntu' Dockerfile
@@ -87,7 +84,6 @@ jobs:
           cd ..
       - name: Build & Push lancachenet/generic
         run: |
-          export DOCKER_CLI_EXPERIMENTAL=enabled
           git clone https://github.com/lancachenet/generic.git
           cd generic
           sed -i '1cFROM jrcichra/lancachenet-ubuntu-nginx' Dockerfile
@@ -97,7 +93,6 @@ jobs:
           cd ..
       - name: Build & Push lancachenet/monolithic
         run: |
-          export DOCKER_CLI_EXPERIMENTAL=enabled
           git clone https://github.com/lancachenet/monolithic.git
           cd monolithic
           sed -i '1cFROM jrcichra/lancachenet-generic' Dockerfile
@@ -106,14 +101,12 @@ jobs:
           cd ..
       - name: Build & Push lancachenet/sniproxy
         run: |
-          export DOCKER_CLI_EXPERIMENTAL=enabled
           git clone https://github.com/lancachenet/sniproxy.git
           cd sniproxy
           docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-sniproxy --push .
           cd ..
       - name: Build & Push lancachenet/lancache-dns
         run: |
-          export DOCKER_CLI_EXPERIMENTAL=enabled
           git clone https://github.com/lancachenet/lancache-dns.git
           cd lancache-dns
           sed -i '1cFROM jrcichra/lancachenet-ubuntu' Dockerfile
