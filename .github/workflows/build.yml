@@ -3,109 +3,97 @@ name: Build
 on:
   schedule:
     # update the images every morning
-    - cron:  '0 0 * * *'
+    - cron: "0 0 * * *"
   push:
-    branches: master
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Prepare environment for buildx
-      run: bash -x ci/prep.sh
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        INFLUX_URL: ${{ secrets.INFLUX_URL }}
-        INFLUX_USERNAME: ${{ secrets.INFLUX_USERNAME }}
-        INFLUX_PASSWORD: ${{ secrets.INFLUX_PASSWORD }}
-    - name: Build & Push jwilder/nginx-proxy for armv7
-      run: |
-        export DOCKER_CLI_EXPERIMENTAL=enabled
-        go get -u github.com/ddollar/forego
-        cd ~/go/src/github.com/ddollar/forego/
-        export GOOS=linux
-        export GOARCH=arm
-        make
-        cd -
-        git clone https://github.com/jwilder/nginx-proxy.git
-        cd nginx-proxy
-        cp ~/go/src/github.com/ddollar/forego/forego .
-        sed -i 's/amd64/armhf/g' Dockerfile
-        sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
-        docker buildx build --platform linux/arm/v7 -t jrcichra/jwilder-nginx-proxy-armv7 --push .
-        cd ..
-        rm -rf nginx-proxy
-      env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build & Push lancachenet/ubuntu
-      run: |
-        export DOCKER_CLI_EXPERIMENTAL=enabled
-        git clone https://github.com/lancachenet/ubuntu.git
-        cd ubuntu
-        docker buildx build --platform linux/arm/v7 -t jrcichra/lancachenet-ubuntu --push .
-        cd ..
-      env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build & Push lancachenet/ubuntu-nginx
-      run: |
-        export DOCKER_CLI_EXPERIMENTAL=enabled
-        git clone https://github.com/lancachenet/ubuntu-nginx.git
-        cd ubuntu-nginx
-        sed -i '1cFROM jrcichra/lancachenet-ubuntu' Dockerfile
-        cat Dockerfile
-        docker buildx build --platform linux/arm/v7 -t jrcichra/lancachenet-ubuntu-nginx --push .
-        cd ..
-      env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build & Push lancachenet/generic
-      run: |
-        export DOCKER_CLI_EXPERIMENTAL=enabled
-        git clone https://github.com/lancachenet/generic.git
-        cd generic
-        sed -i '1cFROM jrcichra/lancachenet-ubuntu-nginx' Dockerfile
-        cat Dockerfile
-        sed -i '29cproxy_max_temp_file_size 1024m;' overlay/etc/nginx/sites-available/generic.conf.d/root/20_cache.conf
-        docker buildx build --platform linux/arm/v7 -t jrcichra/lancachenet-generic --push .
-        cd ..
-      env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build & Push lancachenet/monolithic
-      run: |
-        export DOCKER_CLI_EXPERIMENTAL=enabled
-        git clone https://github.com/lancachenet/monolithic.git
-        cd monolithic
-        sed -i '1cFROM jrcichra/lancachenet-generic' Dockerfile
-        cat Dockerfile
-        docker buildx build --platform linux/arm/v7 -t jrcichra/lancachenet-monolithic --push .
-        cd ..
-      env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build & Push lancachenet/sniproxy
-      run: |
-        export DOCKER_CLI_EXPERIMENTAL=enabled
-        git clone https://github.com/lancachenet/sniproxy.git
-        cd sniproxy
-        docker buildx build --platform linux/arm/v7 -t jrcichra/lancachenet-sniproxy --push .
-        cd ..
-      env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build & Push lancachenet/lancache-dns
-      run: |
-        export DOCKER_CLI_EXPERIMENTAL=enabled
-        git clone https://github.com/lancachenet/lancache-dns.git
-        cd lancache-dns
-        sed -i '1cFROM jrcichra/lancachenet-ubuntu' Dockerfile
-        cat Dockerfile
-        docker buildx build --platform linux/arm/v7 -t jrcichra/lancachenet-lancache-dns --push .
-        cd ..
-      env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
+      - uses: actions/checkout@v1
+      - name: Repo metadata
+        id: repo
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const repo = await github.repos.get(context.repo)
+            return repo.data
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build & Push jwilder/nginx-proxy for armv7
+        run: |
+          go get -u github.com/ddollar/forego
+          cd ~/go/src/github.com/ddollar/forego/
+          export GOOS=linux
+          export GOARCH=arm
+          make
+          cd -
+          git clone https://github.com/jwilder/nginx-proxy.git
+          cd nginx-proxy
+          cp ~/go/src/github.com/ddollar/forego/forego .
+          sed -i 's/amd64/armhf/g' Dockerfile
+          sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
+          docker buildx build --platform linux/arm/v7 -t jrcichra/jwilder-nginx-proxy-armv7 --push .
+          cd ..
+          rm -rf nginx-proxy
+          rm -rf ~/go/src/github.com/ddollar/forego/
+      - name: Build & Push lancachenet/ubuntu
+        run: |
+          git clone https://github.com/lancachenet/ubuntu.git
+          cd ubuntu
+          docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-ubuntu --push .
+          cd ..
+      - name: Build & Push lancachenet/ubuntu-nginx
+        run: |
+          git clone https://github.com/lancachenet/ubuntu-nginx.git
+          cd ubuntu-nginx
+          sed -i '1cFROM jrcichra/lancachenet-ubuntu' Dockerfile
+          cat Dockerfile
+          docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-ubuntu-nginx --push .
+          cd ..
+      - name: Build & Push lancachenet/generic
+        run: |
+          git clone https://github.com/lancachenet/generic.git
+          cd generic
+          sed -i '1cFROM jrcichra/lancachenet-ubuntu-nginx' Dockerfile
+          cat Dockerfile
+          sed -i '29cproxy_max_temp_file_size 1024m;' overlay/etc/nginx/sites-available/generic.conf.d/root/20_cache.conf
+          docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-generic --push .
+          cd ..
+      - name: Build & Push lancachenet/monolithic
+        run: |
+          git clone https://github.com/lancachenet/monolithic.git
+          cd monolithic
+          sed -i '1cFROM jrcichra/lancachenet-generic' Dockerfile
+          cat Dockerfile
+          docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-monolithic --push .
+          cd ..
+      - name: Build & Push lancachenet/sniproxy
+        run: |
+          git clone https://github.com/lancachenet/sniproxy.git
+          cd sniproxy
+          docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-sniproxy --push .
+          cd ..
+      - name: Build & Push lancachenet/lancache-dns
+        run: |
+          git clone https://github.com/lancachenet/lancache-dns.git
+          cd lancache-dns
+          sed -i '1cFROM jrcichra/lancachenet-ubuntu' Dockerfile
+          cat Dockerfile
+          docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-lancache-dns --push .
+          cd ..
