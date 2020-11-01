@@ -52,22 +52,6 @@ jobs:
           cd ..
           rm -rf nginx-proxy
           rm -rf ~/go/src/github.com/ddollar/forego/
-      - name: Build & Push jwilder/nginx-proxy for arm64
-        run: |
-          go get -u github.com/ddollar/forego
-          cd ~/go/src/github.com/ddollar/forego/
-          export GOOS=linux
-          export GOARCH=arm64
-          make
-          cd -
-          git clone https://github.com/jwilder/nginx-proxy.git
-          cd nginx-proxy
-          cp ~/go/src/github.com/ddollar/forego/forego .
-          sed -i 's/amd64/arm64/g' Dockerfile
-          sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
-          docker buildx build --platform linux/arm64 -t jrcichra/jwilder-nginx-proxy-arm64 --push .
-          cd ..
-          rm -rf nginx-proxy
       - name: Build & Push lancachenet/ubuntu
         run: |
           git clone https://github.com/lancachenet/ubuntu.git
