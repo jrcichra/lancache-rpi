@@ -1,4 +1,4 @@
-# Lancache Monolithic for ARM
+# Lancache Monolithic for ARM32/ARM64
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/jrcichra/lancachenet-monolithic?label=Monolithic) ![Docker Pulls](https://img.shields.io/docker/pulls/jrcichra/lancachenet-lancache-dns?label=Lancache-dns) ![Docker Pulls](https://img.shields.io/docker/pulls/jrcichra/lancachenet-sniproxy?label=Sniproxy) ![Docker Pulls](https://img.shields.io/docker/pulls/jrcichra/lancachenet-generic?label=Generic)
 
