@@ -35,23 +35,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build & Push jwilder/nginx-proxy for armv7
-        run: |
-          go get -u github.com/ddollar/forego
-          cd ~/go/src/github.com/ddollar/forego/
-          export GOOS=linux
-          export GOARCH=arm
-          make
-          cd -
-          git clone https://github.com/jwilder/nginx-proxy.git
-          cd nginx-proxy
-          cp ~/go/src/github.com/ddollar/forego/forego .
-          sed -i 's/amd64/armhf/g' Dockerfile
-          sed -i '18cADD ./forego /usr/local/bin/forego' Dockerfile
-          docker buildx build --platform linux/arm/v7 -t jrcichra/jwilder-nginx-proxy-armv7 --push .
-          cd ..
-          rm -rf nginx-proxy
-          rm -rf ~/go/src/github.com/ddollar/forego/
       - name: Build & Push lancachenet/ubuntu
         run: |
           git clone https://github.com/lancachenet/ubuntu.git
