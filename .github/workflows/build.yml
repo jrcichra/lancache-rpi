@@ -55,7 +55,7 @@ jobs:
           cd generic
           sed -i '1cFROM jrcichra/lancachenet-ubuntu-nginx' Dockerfile
           cat Dockerfile
-          sed -i '18cproxy_max_temp_file_size 1024m;' /overlay/etc/nginx/sites-available/generic.conf.d/root/20_cache.conf
+          sed -i '2cproxy_max_temp_file_size 1024m;' /overlay/etc/nginx/sites-available/cache.conf.d/root/30_cache_key.conf
           docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-generic --push .
           cd ..
       - name: Build & Push lancachenet/monolithic
