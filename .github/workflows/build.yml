@@ -55,8 +55,6 @@ jobs:
           cd generic
           sed -i '1cFROM jrcichra/lancachenet-ubuntu-nginx' Dockerfile
           cat Dockerfile
-          cp ../20_cache.conf overlay/etc/nginx/sites-available/cache.conf.d/root/20_cache.conf
-          ls -lrt overlay/etc/nginx/sites-available/cache.conf.d/root/
           docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-generic --push .
           cd ..
       - name: Build & Push lancachenet/monolithic
@@ -65,6 +63,7 @@ jobs:
           cd monolithic
           sed -i '1cFROM jrcichra/lancachenet-generic' Dockerfile
           cat Dockerfile
+          cp ../20_cache.conf overlay/etc/nginx/sites-available/cache.conf.d/root/20_cache.conf
           docker buildx build --platform linux/arm/v7,linux/arm64 -t jrcichra/lancachenet-monolithic --push .
           cd ..
       - name: Build & Push lancachenet/sniproxy
