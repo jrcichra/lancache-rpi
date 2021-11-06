@@ -1,9 +1,9 @@
 name: Build
 
 on:
-  schedule:
+  #schedule:
     # update the images every morning
-    - cron: "0 0 * * *"
+    #- cron: "0 0 * * *"
   push:
   pull_request:
 
